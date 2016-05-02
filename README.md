@@ -1,3 +1,5 @@
-# Tutorial
+There are two short bash scripts that are used to take backups of Citrix Xen VMs and store the backups on network attached storage. The scripts assume that you have already mounted an NFS somewhere on your Xen server.
 
-This is my tutorial repository.
+The first script is a weekly script. This script first creates a file called /tmp/uuids.txt. This file contains the list of all VMs on a given server. For example, /tmp/uuids.txt on xen03 will contain a list of every VM on xen03. Next, the script splits the uuids.txt file into smaller groups, so that the number of VMs backed up in a given night is reasonable. The script creates a file for each day of the week and puts about 1/5th of the VMs into each daily file. The files are created in /tmp/ and are named xenVMBackupsMonday.txt xenVMBackupsTuesday.txt.... etc
+
+Next, there is a daily script. The script is smart enough to know what day of the week it is and what file to use. If it is Monday, for example, then the script will use xenVMBackupsMonday.txt as the list of VMs to be backed up. The script creates a directory with the current date and takes a snapshot of the first VM on the list, exports the snapshot to a VM template, and saves it on your mounted NFS share. You can edit the file path to be whatever you'd like.
